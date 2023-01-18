@@ -45,8 +45,13 @@ async function launchPyxel(params) {
   console.log(params);
   _allowGamepadConnection();
   _suppressPinchOperations();
-  await _createScreenElements();
+  var sdl2Canvas = await _createScreenElements();
   let pyodide = await _loadPyodideAndPyxel();
+
+  /* Added */
+  pyodide._module.canvas = sdl2Canvas;
+  /*********/
+
   _hookFileOperations(pyodide, params.root || ".");
   await _waitForInput();
   await _executePyxelCommand(pyodide, params);
@@ -128,6 +133,8 @@ async function _createScreenElements() {
   await new Promise((resolve) => setTimeout(resolve, 50));
   pyxelScreen.appendChild(logoImage);
   _updateScreenElementsSize();
+
+  return sdl2Canvas;
 }
 
 async function _loadScript(scriptSrc) {
