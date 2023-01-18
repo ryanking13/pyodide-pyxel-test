@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-86QMDH8ZNH"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-86QMDH8ZNH");
+    </script>
+    <title>Pyxel Web Launcher</title>
+    <script src="https://cdn.jsdelivr.net/gh/ryanking13/pyodide-pyxel-test/pyxel.js"></script>
+  </head>
+  <body class="pyxel-scheme">
+    <script>
+      function printUsage() {
+        document.body.innerHTML = `
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+          <h1>Pyxel Web Launcher</h1>
+          <p>
+            Launcher tool for the WebAssembly version of
+            <a href="https://github.com/kitao/pyxel">Pyxel</a>, a retro game
+            engine for Python.
+          </p>
+          <p>
+            For specific instructions, please refer to
+            <a href="https://github.com/kitao/pyxel/wiki/How-To-Use-Pyxel-Web"
+              >this page</a
+            >.
+          </p>
+        `;
+      }
+
+      let queries = new URL(document.location).searchParams;
+      let command, paths, ext;
+      if (queries.get("run")) {
+        command = "run";
+        paths = queries.get("run").split(".");
+        ext = ".py";
+      } else if (queries.get("play")) {
+        command = "play";
+        paths = queries.get("play").split(".");
+        ext = ".pyxapp";
+      } else if (queries.get("edit")) {
+        command = "edit";
+        paths = queries.get("edit").split(".");
+        ext = ".pyxres";
+      } else {
+        printUsage();
+      }
+      if (command) {
+        launchPyxel({
+          root: "https://cdn.jsdelivr.net/gh/" + paths.slice(0, -1).join("/"),
+          command: command,
+          name: paths[paths.length - 1] + ext,
+          packages: queries.get("packages"),
+          gamepad: queries.get("gamepad"),
+          editor: queries.get("editor"),
+        });
+      }
+    </script>
+  </body>
+</html>
