@@ -1,7 +1,7 @@
 const NO_SLEEP_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js";
 const PYODIDE_SDL2_URL =
-  "https://cdn.jsdelivr.net/gh/ryanking13/pyodide-pyxel-test@0.2/pyodide-sdl/pyodide.js";
+  "https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js";
 const PYXEL_LOGO_PATH = "./docs/images/pyxel_logo_76x32.png";
 const TOUCH_TO_START_PATH = "./docs/images/touch_to_start_114x14.png";
 const CLICK_TO_START_PATH = "./docs/images/click_to_start_114x14.png";
@@ -49,7 +49,8 @@ async function launchPyxel(params) {
   let pyodide = await _loadPyodideAndPyxel();
 
   /* Added */
-  pyodide._module.canvas = sdl2Canvas;
+  pyodide._api._skip_unwind_fatal_error = true;
+  pyodide.canvas.setCanvas2D(sdl2Canvas);
   /*********/
 
   _hookFileOperations(pyodide, params.root || ".");
